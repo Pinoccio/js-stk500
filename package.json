@@ -1,0 +1,33 @@
+{
+  "name": "stk500",
+  "version": "0.0.0",
+  "description": "STK500 in javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pinoccio/js-stk500.git"
+  },
+  "keywords": [
+    "stk500",
+    "chrome",
+    "browserify",
+    "node",
+    "serial",
+    "arduino",
+    "embedded",
+    "iot"
+  ],
+  "author": {
+    "name": "Jeremie Miller",
+    "email": "jeremie@jabber.org",
+    "url": "http://jeremie.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pinoccio/js-stk500/issues"
+  },
+  "homepage": "https://github.com/Pinoccio/js-stk500"
+}
