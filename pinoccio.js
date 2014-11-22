@@ -337,8 +337,10 @@ Device.prototype.pagedWrite = function(bytes, cbDone) {
         // Set the program address
         function(cbStep) {
           var useaddr = pageaddr >> 1;
-          var cmdBuf = [0x06, 0x80, 0x00, 0x00, 0x00];
-          cmdBuf[3] = useaddr >> 8;
+          var cmdBuf = [0x06];
+          cmdBuf[1] = (useaddr >> 24) & 0xff | 0x80;
+          cmdBuf[2] = (useaddr >> 16) & 0xff;
+          cmdBuf[3] = (useaddr >> 8) & 0xff;
           cmdBuf[4] = useaddr & 0xff;
           self.sendBootloadCommand(cmdBuf, function(err, pkt) {
             if (err) console.error(err);
