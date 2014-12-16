@@ -36,6 +36,58 @@ function stk500(port) {
   
 };
 
+stk500.prototype.sync = function(attempts, done) {
+  var self = this;
+  var tries = 1;
+
+  var cmd = new Buffer([CMD_SIGN_ON]);
+
+  attempt();
+  function attempt(){
+  	tries=tries+1;
+
+  	self.parser.send(cmd, function(error, pkt){
+
+
+      var res;
+      if(!error){
+        // message response format for CMD_SIGN_ON
+        // 1 CMD_SIGN_ON
+        // 1 STATUS_CMD_OK
+        // 1 8 - length of sig string
+        // 8 the signature string - "STK500_2" or "AVRISP_2"
+        var response = pkt.message;
+
+        if(response[0] !== c.CMD_SIGN_ON){
+          // something is wrong. look for error in constants. 
+          error = new Error('command response was not CMD_SIGN_ON. '+response[0]); 
+          error.code = "E_CMD_ERROR";
+        } else if(response[1] !== c.STATUS_CMD_OK){
+          // malformed. check command status constants and return error
+          error = new Error('command status was incorrect. '+response[1]); 
+          error.code = "E_CMD_STATUS";
+        } else {
+          var len = response[2];
+          res = response.slice(3)+'';
+          if(res.length != len) {
+            // something is wroing but all signs point to right,
+          }
+        }
+      }
+
+      if(error && tries<=attempts){
+        console.log("failed attempt again");
+        return attempt();
+      }
+
+      done(error,res);
+  	});
+  }
+};
+
+
+////// BELOW HERE IS TODO i'm mid refactor.
+
 
 stk500.prototype.reset = function(delay1, delay2, done){
   console.log("reset");
@@ -71,34 +123,6 @@ stk500.prototype.reset = function(delay1, delay2, done){
   		done(error);
   	}
   );
-};
-
-stk500.prototype.sync = function(attempts, done) {
-  console.log("sync");
-  var self = this;
-  var tries = 1;
-
-  var cmd = new Buffer([CMD_SIGN_ON]);
-
-  attempt();
-  function attempt(){
-  	tries=tries+1;
-
-  	self.parser.send(cmd, function(error, results){
-  		console.log("confirm sync");
-      if(error) {
-        if(tries<=attempts){
-          console.log("failed attempt again");
-          attempt();
-        }else{
-          done(error);
-        }
-      }else{
-        console.log("confirmed sync");
-        done(results);
-      }
-  	});
-  }
 };
 
 
