@@ -1,6 +1,6 @@
 
 var test = require('tape');
-var stk500 = require('../stk500');
+var stk500 = require('../');
 var serialport = require('serialport');
 var intel_hex = require('intel-hex');
 var fs = require('fs');
