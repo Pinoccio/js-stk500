@@ -64,13 +64,13 @@ stk500.prototype.sync = function(attempts, done) {
           error.code = "E_CMD_ERROR";
         } else if(response[1] !== c.STATUS_CMD_OK){
           // malformed. check command status constants and return error
-          error = new Error('command status was incorrect. '+response[1]); 
+          error = new Error('command status was not ok. '+response[1]); 
           error.code = "E_CMD_STATUS";
         } else {
           var len = response[2];
           res = response.slice(3)+'';
           if(res.length != len) {
-            // something is wroing but all signs point to right,
+            // something is wrong but all signs point to right, 
           }
         }
       }
@@ -143,7 +143,6 @@ stk500.prototype.verifySignature = function(signature, done) {
 }
 
 stk500.prototype.getSignature = function(done) {
-  console.log("read signature");
   var self = this;
 
   var reportedSignature = new Buffer(3);
@@ -158,7 +157,6 @@ stk500.prototype.getSignature = function(done) {
   			var cmd = new Buffer([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x00, 0x00]);
 
   			self.parser.send(cmd, function(error, pkt) {
-  				console.log("sent sig1");
 
   				if (pkt && pkt.message && pkt.message.length >= 6)
   				{

@@ -8,12 +8,12 @@ var data = fs.readFileSync(__dirname+'/../../panda-attack/bootstrap.hex')+'';
 var hex = intel_hex.parse(data).data;
 
 
-//var pageSize = 256;
+var pageSize = 256;
 var baud = 115200;
-//var delay1 = 10;
-//var delay2 = 1;
-/*
-var signature = new Buffer([0x1e, 0x98, 0x01]);
+var delay1 = 10;
+var delay2 = 1;
+
+var signature = new Buffer([0x1e, 0xa8, 0x02]);
 
 var options = {
   timeout:0xc8,
@@ -24,7 +24,7 @@ var options = {
   pollValue:0x53,
   pollIndex:0x03
 };
-*/
+
 
 var comName = '/dev/ttyACM0';
 
@@ -36,16 +36,37 @@ var serialPort = new serialport.SerialPort(comName, {
   console.log(serialPort);
 });
 
-var flasher = stk500(serialPort);
 
-flasher.parser.on('rawinput',function(buf){
+var programmer = stk500(serialPort);
+
+// debug
+programmer.parser.on('rawinput',function(buf){
   console.log("->",buf.toString('hex'));
 })
 
-flasher.parser.on('raw',function(buf){
+programmer.parser.on('raw',function(buf){
   console.log("<-",buf.toString('hex'));
 })
 
-flasher.sync(2,function(err,data){
-  console.log('callback',err," ",data)
-})
+// do it!
+programmer.sync(5,function(err,data){
+  console.log('callback sync',err," ",data)
+});
+
+programmer.verifySignature(signature,function(err,data){
+  console.log('callback sig',err," ",data);
+});
+
+
+programmer.enterProgrammingMode(options,function(err,data){
+   console.log('enter programming mode.',err,data);
+});
+
+programmer.upload( hex, pageSize,function(err,data){
+  console.log('upload> ',err,data);
+
+  programmer.exitProgrammingMode(function(err,data){
+    console.log('exitProgrammingMode> ',err,data)
+  })
+});
+
