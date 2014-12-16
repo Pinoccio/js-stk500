@@ -34,6 +34,7 @@ var serialPort = new serialport.SerialPort(comName, {
 }, function(){
   console.log('opened!',serialPort.opened);
   console.log(serialPort);
+  serialPort.close();
 });
 
 
@@ -69,4 +70,3 @@ programmer.upload( hex, pageSize,function(err,data){
     console.log('exitProgrammingMode> ',err,data)
   })
 });
-

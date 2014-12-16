@@ -76,7 +76,7 @@ stk500.prototype.sync = function(attempts, done) {
       }
 
       if(error && tries<=attempts){
-        console.log("failed attempt again");
+        //console.log("failed attempt again");
         return attempt();
       }
 
@@ -90,33 +90,33 @@ stk500.prototype.sync = function(attempts, done) {
 
 
 stk500.prototype.reset = function(delay1, delay2, done){
-  console.log("reset");
+  //console.log("reset");
 
   var self = this;
 
   async.series([
     function(cbdone) {
-    	console.log("asserting");
+    	//console.log("asserting");
       self.serialPort.set({rts:true, dtr:true}, function(result){
-      	console.log("asserted");
+      	//console.log("asserted");
       	if(result) cbdone(result);
       	else cbdone();
       });
     },
     function(cbdone) {
-    	console.log("wait");
+    	//console.log("wait");
       setTimeout(cbdone, delay1);
     },
     function(cbdone) {
-    	console.log("clearing");
+    	//console.log("clearing");
       self.serialPort.set({rts:false, dtr:false}, function(result){
-      	console.log("clear");
+      	//console.log("clear");
       	if(result) cbdone(result);
       	else cbdone();
       });
     },
     function(cbdone) {
-    	console.log("wait");
+    	//console.log("wait");
       setTimeout(cbdone, delay2);
     }],
   	function(error) {
@@ -127,7 +127,7 @@ stk500.prototype.reset = function(delay1, delay2, done){
 
 
 stk500.prototype.verifySignature = function(signature, done) {
-  console.log("verify signature");
+  //console.log("verify signature");
 
   this.getSignature(function(error, reportedSignature){
 
@@ -179,7 +179,7 @@ stk500.prototype.getSignature = function(done) {
   			var cmd = new Buffer([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x01, 0x00]);
 
   			self.parser.send(cmd, function(error, pkt) {
-  				console.log("sent sig2");
+  				//console.log("sent sig2");
 
   				if (pkt && pkt.message && pkt.message.length >= 6)
   				{
@@ -202,7 +202,7 @@ stk500.prototype.getSignature = function(done) {
   			var cmd = new Buffer([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x02, 0x00]);
 
   			self.parser.send(cmd, function(error, pkt) {
-  				console.log("sent sig3");
+  				//console.log("sent sig3");
 
   				if (pkt && pkt.message && pkt.message.length >= 6)
   				{
@@ -218,7 +218,7 @@ stk500.prototype.getSignature = function(done) {
       }
     ],
     function(error) {
-      console.log("read signature done");
+      //console.log("read signature done");
       done(error, reportedSignature);
     });
 
@@ -226,7 +226,7 @@ stk500.prototype.getSignature = function(done) {
 
 
 stk500.prototype.enterProgrammingMode = function(options, done) {
-  console.log("send enter programming mode");
+  //console.log("send enter programming mode");
 
   var self = this;
 
@@ -254,7 +254,7 @@ stk500.prototype.enterProgrammingMode = function(options, done) {
   var cmd = new Buffer([CMD_ENTER_PROGMODE_ISP, options.timeout, options.stabDelay, options.cmdexeDelay, options.synchLoops, options.byteDelay, options.pollValue, options.pollIndex, cmd1, cmd2, cmd3, cmd4]);
 
   self.parser.send(cmd, function(error, results) {
-  	console.log("sent enter programming mode");
+  	//console.log("sent enter programming mode");
   	// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
     	done(error);
   	// });
@@ -263,7 +263,7 @@ stk500.prototype.enterProgrammingMode = function(options, done) {
 
 
 stk500.prototype.loadAddress = function(useaddr, done) {
-  console.log("load address");
+  //console.log("load address");
   var self = this;
 
   msb = (useaddr >> 24) & 0xff | 0x80;
@@ -274,7 +274,7 @@ stk500.prototype.loadAddress = function(useaddr, done) {
   var cmdBuf = new Buffer([CMD_LOAD_ADDRESS, msb, xsb, ysb, lsb]);
 
   self.parser.send(cmdBuf, function(error, results) {
-  	console.log("confirm load address");
+  	//console.log("confirm load address");
     // self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
     	done(error);
     // });
@@ -285,7 +285,7 @@ stk500.prototype.loadAddress = function(useaddr, done) {
 
 
 stk500.prototype.loadPage = function(writeBytes, done) {
-  console.log("load page");
+  //console.log("load page");
   var self = this;
 
   var bytesMsb = writeBytes.length >> 8; //Total number of bytes to program, MSB first
@@ -304,7 +304,7 @@ stk500.prototype.loadPage = function(writeBytes, done) {
   cmdBuf = Buffer.concat([cmdBuf,writeBytes]);
 
   self.parser.send(cmdBuf, function(error, results) {
-  	console.log("loaded page");
+  	//console.log("loaded page");
 
   	// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   		done(error);
@@ -314,7 +314,7 @@ stk500.prototype.loadPage = function(writeBytes, done) {
 };
 
 stk500.prototype.upload = function(hex, pageSize, done) {
-  console.log("program");
+  //console.log("program");
 
   var pageaddr = 0;
   var writeBytes;
@@ -326,7 +326,7 @@ stk500.prototype.upload = function(hex, pageSize, done) {
   async.whilst(
     function() { return pageaddr < hex.length; },
     function(pagedone) {
-  		console.log("program page");
+  		//console.log("program page");
       async.series([
         function(cbdone){
         	useaddr = pageaddr >> 1;
@@ -344,25 +344,25 @@ stk500.prototype.upload = function(hex, pageSize, done) {
           self.loadPage(writeBytes, cbdone);
         },
         function(cbdone){
-  				console.log("programmed page");
+  				//console.log("programmed page");
           pageaddr =  pageaddr + writeBytes.length;
           setTimeout(cbdone, 4);
         }
       ],
       function(error) {
-        console.log("page done");
+        //console.log("page done");
         pagedone(error);
       });
     },
     function(error) {
-      console.log("upload done");
+      //console.log("upload done");
       done(error);
     }
   );
 };
 
 stk500.prototype.exitProgrammingMode = function(done) {
-  console.log("send leave programming mode");
+  //console.log("send leave programming mode");
   var self = this;
 
   var preDelay = 0x01;
@@ -371,7 +371,7 @@ stk500.prototype.exitProgrammingMode = function(done) {
   var cmd = new Buffer([CMD_LEAVE_PROGMODE_ISP, preDelay, postDelay]);
 
   self.parser.send(cmd, function(error, results) {
-  	console.log("sent leave programming mode");
+  	//console.log("sent leave programming mode");
   	// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   		done(error);
   	// });
