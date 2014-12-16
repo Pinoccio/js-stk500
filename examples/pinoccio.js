@@ -55,21 +55,18 @@ programmer.sync(5,function(err,data){
 
 programmer.verifySignature(signature,function(err,data){
   console.log('callback sig',err," ",data);
-
-  programmer.enterProgrammingMode(options,function(err,data){
-     console.log('enter programming mode.',err,data);
-  });
-
-  programmer.upload( hex, pageSize,function(err,data){
-    console.log('upload> ',err,data);
-
-    programmer.exitProgrammingMode(function(err,data){
-      console.log('exitProgrammingMode> ',err,data)
-    })
-  });
-
 });
 
 
+programmer.enterProgrammingMode(options,function(err,data){
+   console.log('enter programming mode.',err,data);
+});
 
+programmer.upload( hex, pageSize,function(err,data){
+  console.log('upload> ',err,data);
+
+  programmer.exitProgrammingMode(function(err,data){
+    console.log('exitProgrammingMode> ',err,data)
+  })
+});
 
