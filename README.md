@@ -26,12 +26,9 @@ var serialPort = new SerialPort.SerialPort(port.comName, {
 Then you can instantiate a programmer.
 
 ```
-var stk500 = require('stk500');
+var stk500 = require('stk500-v2');
 
 var programmerv2 = stk500(serialPort);
-// or for v1
-var programmerv1 = stk500.v1(serialPort);
-
 
 ```
 
@@ -49,27 +46,8 @@ Global variables use 9 bytes (0%) of dynamic memory, leaving 2,039 bytes for loc
 ```
 Grab that hex file and you're good to go.
 
-###Gotchas
-* Only works on MacOSX (and probably linux). Requires on Chris Williams excellent nodeserial implementation https://github.com/voodootikigod/node-serialport. However nodeserial doesn't currently support manual rts/dtr signaling so I have a fork with unix bindings https://github.com/jacobrosenthal/node-serialport/tree/controlsignals
-* Since I'm forking nodeserial and not hosting a new version yet I've got a postinstall step that tries to run ./postinstall to kick off a fresh build.
-* intel-hex and fs are dependancies only for the example file
-
-
 ###CHANGELOG
-0.0.1 
-first
 
-0.0.2
-Added loading from fs to example, some example hexes from arduino 1.0.6 for Uno, and instructions on how to find a hex file to load.
-
-0.0.3
-Bugs squashed leading to much more stable getsync and less attempts necessary to successfuly programmin. Slight refactor in example and clearer console.log messaging.
-
-0.0.4
-Slight require change for browserfy-ability and a few more touchups in example
-
-0.0.5
-Fixed instability issue especially in chrome where listeners were not being deregistered
-
-0.0.6
-Added ability to verify device signature.
+1.0.0
+removed support for stk500 v1 because that is now another project 
+updated readme
