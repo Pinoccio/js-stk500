@@ -1,7 +1,7 @@
 {
-  "name": "stk500",
-  "version": "1.0.0-wip",
-  "description": "STK500 in javascript",
+  "name": "stk500-v2",
+  "version": "1.0.0",
+  "description": "STK500 v2 programmer in javascript",
   "main": "index.js",
   "scripts": {
     "test": "tape test/*.js"
@@ -21,9 +21,9 @@
     "iot"
   ],
   "contributors": [
-    "Jacob Rosenthal (https://github.com/jacobrosenthal/)",
     "Ryan Day <soldair@gmail.com> (https://github.com/soldair/)",
-    "Jeremie Miller <jeremie@jabber.org> (http://jeremie.com/)"
+    "Jeremie Miller <jeremie@jabber.org> (http://jeremie.com/)",
+    "Jacob Rosenthal (https://github.com/jacobrosenthal/)"
   ],
   "license": "MIT",
   "bugs": {
