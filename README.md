@@ -1,9 +1,9 @@
-stk500
+stk500-v2
 =========
 
 [STK500](http://www.atmel.com/tools/stk500.aspx) javascript implementation for node and browserify
 
-Fully javascript stk500v2 and stk500v1 programmer. Allows you to program Arduinos straight from node (or browser for that matter). No more avrdude system calls or using the arduino IDE.
+Fully javascript stk500v2 programmer. Allows you to program Arduinos straight from node (or browser for that matter). No more avrdude system calls or using the arduino IDE.
 
 ###INSTALL
 ```
