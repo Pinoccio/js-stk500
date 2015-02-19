@@ -7,7 +7,7 @@ Fully javascript stk500v2 programmer. Allows you to program Arduinos straight fr
 
 ###INSTALL
 ```
-npm install stk500
+npm install stk500-v2
 ```
 
 ####Program:
