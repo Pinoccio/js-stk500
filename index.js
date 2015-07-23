@@ -131,8 +131,8 @@ stk500.prototype.verifySignature = function(signature, done) {
 
   this.getSignature(function(error, reportedSignature){
 
-  	console.log(reportedSignature);
-  	console.log(signature);
+  	//console.log(reportedSignature);
+  	//console.log(signature);
   	if(!bufferEqual(signature, reportedSignature)){
   		done(new Error("signature doesnt match. Found: " + reportedSignature.toString('hex'), error));
   	}else{
