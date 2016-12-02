@@ -1,6 +1,6 @@
 {
   "name": "stk500-v2",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "STK500 v2 programmer in javascript",
   "main": "index.js",
   "scripts": {
