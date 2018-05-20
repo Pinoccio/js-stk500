@@ -35,8 +35,8 @@
     "buffer-equal": "0.0.1"
   },
   "devDependencies": {
-    "serialport": "~1.4.9",
     "intel-hex": "~0.1.1",
+    "serialport": "^6.2.0",
     "tape": "~2.12.2"
   }
 }
