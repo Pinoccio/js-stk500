@@ -31,8 +31,7 @@
   },
   "homepage": "https://github.com/Pinoccio/js-stk500",
   "dependencies": {
-    "async": "^0.9.0",
-    "buffer-equal": "0.0.1"
+    "async": "^0.9.0"
   },
   "devDependencies": {
     "intel-hex": "~0.1.1",
