@@ -1,7 +1,6 @@
 //use strict might have screwed up my this context, or might not have.. 
 
 var async = require("async");
-var bufferEqual = require('buffer-equal');
 var parser = require('./lib/parser-v2.js');
 var c = require('./lib/constants-v2.js');
 
@@ -40,7 +39,7 @@ stk500.prototype.sync = function(attempts, done) {
   var self = this;
   var tries = 1;
 
-  var cmd = new Buffer([CMD_SIGN_ON]);
+  var cmd = Buffer.from([CMD_SIGN_ON]);
 
   attempt();
   function attempt(){
@@ -133,7 +132,7 @@ stk500.prototype.verifySignature = function(signature, done) {
 
   	//console.log(reportedSignature);
   	//console.log(signature);
-  	if(!bufferEqual(signature, reportedSignature)){
+  	if(!signature.equals(reportedSignature)){
   		done(new Error("signature doesnt match. Found: " + reportedSignature.toString('hex'), error));
   	}else{
   		done();
@@ -145,7 +144,7 @@ stk500.prototype.verifySignature = function(signature, done) {
 stk500.prototype.getSignature = function(done) {
   var self = this;
 
-  var reportedSignature = new Buffer(3);
+  var reportedSignature = Buffer.alloc(3);
 
     async.series([
       function(cbdone){
@@ -154,7 +153,7 @@ stk500.prototype.getSignature = function(done) {
       	var numRx = 0x04;
       	var rxStartAddr = 0x00;
 
-  			var cmd = new Buffer([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x00, 0x00]);
+  			var cmd = Buffer.from([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x00, 0x00]);
 
   			self.parser.send(cmd, function(error, pkt) {
 
@@ -164,7 +163,7 @@ stk500.prototype.getSignature = function(done) {
   					reportedSignature.writeUInt8(sig, 0);
   				}
 
-  				// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+  				// self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   			  	cbdone(error);
   				// });
   			});
@@ -176,7 +175,7 @@ stk500.prototype.getSignature = function(done) {
       	var numRx = 0x04;
       	var rxStartAddr = 0x00;
 
-  			var cmd = new Buffer([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x01, 0x00]);
+  			var cmd = Buffer.from([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x01, 0x00]);
 
   			self.parser.send(cmd, function(error, pkt) {
   				//console.log("sent sig2");
@@ -187,7 +186,7 @@ stk500.prototype.getSignature = function(done) {
   					reportedSignature.writeUInt8(sig, 1);
   				}
 
-  				// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+  				// self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   			  	cbdone(error);
   				// });
   			});
@@ -199,7 +198,7 @@ stk500.prototype.getSignature = function(done) {
       	var numRx = 0x04;
       	var rxStartAddr = 0x00;
 
-  			var cmd = new Buffer([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x02, 0x00]);
+  			var cmd = Buffer.from([CMD_SPI_MULTI, numTx, numRx, rxStartAddr, 0x30, 0x00, 0x02, 0x00]);
 
   			self.parser.send(cmd, function(error, pkt) {
   				//console.log("sent sig3");
@@ -210,7 +209,7 @@ stk500.prototype.getSignature = function(done) {
   					reportedSignature.writeUInt8(sig, 2);
   				}
 
-  				// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+  				// self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   			  	cbdone(error);
   				// });
   			});
@@ -251,11 +250,11 @@ stk500.prototype.enterProgrammingMode = function(options, done) {
   var cmd3 = 0x00;
   var cmd4 = 0x00;
 
-  var cmd = new Buffer([CMD_ENTER_PROGMODE_ISP, options.timeout, options.stabDelay, options.cmdexeDelay, options.synchLoops, options.byteDelay, options.pollValue, options.pollIndex, cmd1, cmd2, cmd3, cmd4]);
+  var cmd = Buffer.from([CMD_ENTER_PROGMODE_ISP, options.timeout, options.stabDelay, options.cmdexeDelay, options.synchLoops, options.byteDelay, options.pollValue, options.pollIndex, cmd1, cmd2, cmd3, cmd4]);
 
   self.parser.send(cmd, function(error, results) {
   	//console.log("sent enter programming mode");
-  	// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+  	// self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
     	done(error);
   	// });
   });
@@ -271,11 +270,11 @@ stk500.prototype.loadAddress = function(useaddr, done) {
   ysb = (useaddr >> 8) & 0xff;
   lsb = useaddr & 0xff;
 
-  var cmdBuf = new Buffer([CMD_LOAD_ADDRESS, msb, xsb, ysb, lsb]);
+  var cmdBuf = Buffer.from([CMD_LOAD_ADDRESS, msb, xsb, ysb, lsb]);
 
   self.parser.send(cmdBuf, function(error, results) {
   	//console.log("confirm load address");
-    // self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+    // self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
     	done(error);
     // });
 
@@ -299,14 +298,14 @@ stk500.prototype.loadPage = function(writeBytes, done) {
   var poll2 = 0x00; //Poll Value #2 (not used for flash programming)
 
 
-  var cmdBuf = new Buffer([CMD_PROGRAM_FLASH_ISP, bytesMsb, bytesLsb, mode, delay, cmd1, cmd2, cmd3, poll1, poll2]);
+  var cmdBuf = Buffer.from([CMD_PROGRAM_FLASH_ISP, bytesMsb, bytesLsb, mode, delay, cmd1, cmd2, cmd3, poll1, poll2]);
 
   cmdBuf = Buffer.concat([cmdBuf,writeBytes]);
 
   self.parser.send(cmdBuf, function(error, results) {
   	//console.log("loaded page");
 
-  	// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+  	// self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   		done(error);
   	// });
 
@@ -368,11 +367,11 @@ stk500.prototype.exitProgrammingMode = function(done) {
   var preDelay = 0x01;
   var postDelay = 0x01;
 
-  var cmd = new Buffer([CMD_LEAVE_PROGMODE_ISP, preDelay, postDelay]);
+  var cmd = Buffer.from([CMD_LEAVE_PROGMODE_ISP, preDelay, postDelay]);
 
   self.parser.send(cmd, function(error, results) {
   	//console.log("sent leave programming mode");
-  	// self.matchReceive(new Buffer([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
+  	// self.matchReceive(Buffer.from([Resp_STK_INSYNC, Resp_STK_OK]), timeout, function(error){
   		done(error);
   	// });
   });
