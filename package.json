@@ -36,6 +36,6 @@
   "devDependencies": {
     "intel-hex": "~0.1.1",
     "serialport": "^6.2.0",
-    "tape": "~2.12.2"
+    "tape": "~5.6.1"
   }
 }
